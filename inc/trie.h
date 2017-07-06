@@ -17,6 +17,7 @@ typedef struct node
     bool is_data_present;
     char data_char;
     struct node *next_ptr[256];
+    int size;
     void *data;
 }node;
 
@@ -28,7 +29,7 @@ node * find_head(int trie_id);
 int assign_head(int trie_id, node *h_node);
 int create_node(node *curr_node, char new_char);
 node *get_next_ptr(node *curr_node, char new_char);
-int insert_data(node *curr_node, char *data);
-int trie_insert(int trie_id, char *word, char *data);
+int insert_data(node *curr_node, void *data, int size);
+int trie_insert(int trie_id, char *word, void *data, int size);
 void free_node(node *new_node);
 void print_node(node *new_node);
