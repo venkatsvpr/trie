@@ -7,6 +7,11 @@ void *my_alloc(int size)
         memset(ptr,0,size);
     return ptr;
 }
+void my_free(void *void_ptr)
+{
+    free(void_ptr);
+    return;
+}
 int create_trie(int trie_id)
 {
     node *head_node = NULL;
@@ -63,8 +68,8 @@ int insert_data(node *curr_node, char *data)
     curr_node->is_data_present = true;
     curr_node->data =(char *) my_alloc(strlen(data));
     strncpy(curr_node->data,data,strlen(data));
-    printf ("inserting data %s\r\n",data);
-    return;
+    printf ("inserting data %s at %c \r\n",data,curr_node->data_char);
+    return OSIX_SUCCESS;
 }
 
 int trie_insert(int trie_id, char *word, char *data)
@@ -72,16 +77,14 @@ int trie_insert(int trie_id, char *word, char *data)
     node *head = find_head(trie_id);
     int i = 0;
     node *curr_node = head;
-    node *save_node = NULL;
     for (i = 0 ; i <strlen(word); i++)
     {
         printf ("<%c:>\t ",word[i]);
-        save_node = curr_node;
         create_node(curr_node,word[i]);
         curr_node = get_next_ptr(curr_node,word[i]);
     }                                                                                                        
 
-    insert_data(save_node,data);
+    insert_data(curr_node,data);
     return OSIX_SUCCESS;
 }
 
@@ -108,3 +111,50 @@ void print_node(node *curr_node)
     return;
 }
 
+void free_node(node *curr_node)
+{
+    node *nxt_ptr;
+    int i = 0;
+    if (curr_node->is_data_present)
+    {
+        curr_node->is_data_present = false;
+        my_free(curr_node->data);
+    }
+
+    for (i = 0 ;i < 256; i++)
+    {
+        nxt_ptr = curr_node->next_ptr[i];
+        if (nxt_ptr != NULL)
+        {
+            free_node(nxt_ptr);
+            curr_node->next_ptr[i]=NULL;
+        }
+    }
+    
+    my_free(curr_node);
+    return;
+}   
+ 
+char * find_word(int trie_id,char *string,node *node_ptr, int offset)
+{
+
+    int i = 0;
+    if (node_ptr == NULL)
+        return NULL;
+ 
+    printf ("<%s:%d> %s: offset %d char %c \r\n",__func__,__LINE__,string,offset,node_ptr->data_char);
+    if (offset == strlen(string))
+    {
+        if (node_ptr->is_data_present)
+        {
+            return node_ptr->data;
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+    find_word(trie_id,string,node_ptr->next_ptr[string[offset]],offset+1);
+}
+
+    

@@ -30,5 +30,5 @@ int create_node(node *curr_node, char new_char);
 node *get_next_ptr(node *curr_node, char new_char);
 int insert_data(node *curr_node, char *data);
 int trie_insert(int trie_id, char *word, char *data);
-
-
+void free_node(node *new_node);
+void print_node(node *new_node);
