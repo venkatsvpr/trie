@@ -1,12 +1,5 @@
 #include "trie.h"
 
-static volatile int keepRunning = 1;
-
-void intHandler(int dummy) {
-    keepRunning = 0;
-}
-
-
 void main()
 {
     int i =0;

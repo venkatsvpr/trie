@@ -68,7 +68,6 @@ int insert_data(node *curr_node, char *data)
     curr_node->is_data_present = true;
     curr_node->data =(char *) my_alloc(strlen(data));
     strncpy(curr_node->data,data,strlen(data));
-    printf ("inserting data %s at %c \r\n",data,curr_node->data_char);
     return OSIX_SUCCESS;
 }
 
@@ -79,7 +78,6 @@ int trie_insert(int trie_id, char *word, char *data)
     node *curr_node = head;
     for (i = 0 ; i <strlen(word); i++)
     {
-        printf ("<%c:>\t ",word[i]);
         create_node(curr_node,word[i]);
         curr_node = get_next_ptr(curr_node,word[i]);
     }                                                                                                        
@@ -97,7 +95,7 @@ void print_node(node *curr_node)
     printf (" .%c ",curr_node->data_char);
     if (curr_node->is_data_present)
     {
-        printf (" data:--> %s\n",(char *)curr_node->data);
+        printf (" [data]:--> %s\n",(char *)curr_node->data);
     }
 
     for (i=0;i<256;i++)
@@ -142,7 +140,6 @@ char * find_word(int trie_id,char *string,node *node_ptr, int offset)
     if (node_ptr == NULL)
         return NULL;
  
-    printf ("<%s:%d> %s: offset %d char %c \r\n",__func__,__LINE__,string,offset,node_ptr->data_char);
     if (offset == strlen(string))
     {
         if (node_ptr->is_data_present)
