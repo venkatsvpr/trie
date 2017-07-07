@@ -25,8 +25,6 @@ typedef struct node
 
 static node *trie_list[MAX_TRIE_NODES];
 
-static node *trie_head = NULL;
-
 void *my_alloc(int size);
 int trie_init(int trie_id);
 node * find_head(int trie_id);
