@@ -1,5 +1,9 @@
 #include "trie.h"
 
+/* Function Name :  my_alloc
+ * Description   :  This function is used to malloc for specified size
+ * Return Value  :  void_ptr
+ */
 void *my_alloc(int size)
 {
     void *ptr = malloc(size);
@@ -7,12 +11,26 @@ void *my_alloc(int size)
         memset(ptr,0,size);
     return ptr;
 }
+
+/* Function Name :  trie_init
+ * Description   :  This function is used to init a trie head node
+ *                  creates a TRIE node and inserts it into the
+ *                  trie_list. 
+ * Return Value  :  OSIX_SUCCESS/OSIX_FAILURE
+ */
 void my_free(void *void_ptr)
 {
     free(void_ptr);
     return;
 }
-int create_trie(int trie_id)
+
+/* Function Name :  trie_init
+ * Description   :  This function is used to init a trie head node
+ *                  creates a TRIE node and inserts it into the
+ *                  trie_list. 
+ * Return Value  :  OSIX_SUCCESS/OSIX_FAILURE
+ */
+int trie_init(int trie_id)
 {
     node *head_node = NULL;
     head_node = (node *)my_alloc(sizeof(struct node));
@@ -26,14 +44,29 @@ int create_trie(int trie_id)
     return OSIX_SUCCESS;
 }
 
+/* Function Name :  find_head
+ * Description   :  Returns the head node for TRIE_ID.
+ * Return Value  :  Head Node/NULL
+ */
 struct node * find_head(int trie_id)
 {
-    return trie_head;
+    if (trie_list[trie_id] != NULL)
+    {
+        return trie_list[trie_id];
+    }
+    return NULL;
 }
 
+/* Function Name :  assign_head
+ * Description   :  Assigns head_node for the trie_id
+ * Return Value  :  OSIX_SUCCESS
+ */
 int assign_head(int trie_id, node *h_node)
 {
-    trie_head = h_node;
+    if (trie_list[trie_id] == NULL)
+    {
+        trie_list[trie_id] = h_node;
+    }
     return OSIX_SUCCESS;
 }
 
@@ -73,17 +106,16 @@ int insert_data(node *curr_node, void *data, int size)
     return OSIX_SUCCESS;
 }
 
-int trie_insert(int trie_id, char *word, void *data, int size)
+int trie_insert_data_into_key(int trie_id, char *key, void *data, int size)
 {
     node *head = find_head(trie_id);
     int i = 0;
     node *curr_node = head;
-    for (i = 0 ; i <strlen(word); i++)
+    for (i = 0 ; i <strlen(key); i++)
     {
-        create_node(curr_node,word[i]);
-        curr_node = get_next_ptr(curr_node,word[i]);
-    }                                                                                                        
-
+        create_node(curr_node,key[i]);
+        curr_node = get_next_ptr(curr_node,key[i]);
+    }                                                                                   
     insert_data(curr_node,data,size);
     return OSIX_SUCCESS;
 }
@@ -116,6 +148,12 @@ void print_node(node *curr_node)
     return;
 }
 
+void free_node_id (int trie_id)
+{
+    free_node(find_head(trie_id));
+    return;
+}
+
 void free_node(node *curr_node)
 {
     node *nxt_ptr;
@@ -139,17 +177,30 @@ void free_node(node *curr_node)
     my_free(curr_node);
     return;
 }   
- 
-void * find_word(int trie_id,node *node_ptr, char *str, int offset)
-{
 
+/* Function Name :  find_data_from_id
+ * Description   :  find the data in the trie_id and key
+ * Return Value  :  node ptr/NULL
+ */
+void *find_data_from_id(int trie_id, char*key)
+{
+    return (find_data(trie_id,find_head(trie_id,key,0);
+}
  
+/* Function Name :  find_data
+ * Description   :  find the data in the trie_id and key 
+ *                  offset - initially called with 0, incremented
+ *                  everytime.
+ * Return Value  :  node ptr/NULL
+ */
+void * find_data(int trie_id,node *node_ptr, char *key, int offset)
+{
     if (node_ptr == NULL)
         return NULL;
 
-    char c = str[offset];    
+    char c = key[offset];    
    // printf ("<%c > str:%s offset %d\r\n",c,str,offset);
-    if (offset == strlen(str))
+    if (offset == strlen(key))
     {
         if (node_ptr->is_data_present)
         {
@@ -162,7 +213,7 @@ void * find_word(int trie_id,node *node_ptr, char *str, int offset)
         }
     }
     node *nxt_ptr = node_ptr->next_ptr[c];
-    find_word(trie_id,nxt_ptr,str,offset+1);
+    find_data(trie_id,nxt_ptr,key,offset+1);
 }
 
     
