@@ -25,7 +25,7 @@ typedef struct node
 
 static node *trie_list[MAX_TRIE_NODES];
 
-void *my_alloc(int size);
+
 int trie_init(int trie_id);
 node * find_head(int trie_id);
 int assign_head(int trie_id, node *h_node);
@@ -34,6 +34,14 @@ node *get_next_ptr(node *curr_node, char new_char);
 int insert_data(node *curr_node, void *data, int size);
 int trie_insert_data_into_key(int trie_id, char *key, void *data, int size);
 void free_node(node *new_node);
-void free_node_id(int trie_id);
+void trie_deinit(int trie_id);
 void print_node(node *new_node);
 void * find_data(int trie_id,node *node_ptr, char *key, int offset);
+void *my_alloc(int size);                                                                        
+void my_free(void *void_ptr);
+void trie_init_globals(void); 
+void trie_deinit_globals(void); 
+
+
+                                                             
+

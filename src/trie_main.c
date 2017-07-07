@@ -5,6 +5,7 @@ void main()
     int i =0;
 
     char line[256];
+    trie_init_globals();
     trie_init(TRIE_ID);
     char *key = NULL;
     char *data = NULL;
@@ -20,7 +21,7 @@ void main()
         gets(line);
         data = (char *) my_alloc(strlen(line));
         strncpy(data,line,strlen(line));
-        printf ("strlen line %d sizeof(data) %d \r\n",strlen(line),sizeof(data));
+        printf ("strlen line %d sizeof(data) %d \r\n",(int)strlen(line),(int)sizeof(data));
         trie_insert_data_into_key(TRIE_ID,key,data,strlen(line));
         i++;
         if (key)
@@ -33,10 +34,11 @@ void main()
     printf("enter a key to search \r\n");
     memset(line,0,sizeof(line));
     gets(line);
-    node *tnode = find_data_from_id(TRIE_ID,line);
+    node *tnode = (node *)find_data_from_id(TRIE_ID,line);
     memset(line,0,sizeof(line));
     memcpy(line,tnode->data,tnode->size);
     printf("The found data is %s  size %d \r\n",line,tnode->size);
-    free_node_id(TRIE_ID);
+    trie_deinit(TRIE_ID);
+    trie_deinit_globals();
     return;
 }
