@@ -55,9 +55,6 @@ int create_node(node *curr_node, char new_char)
     if (curr_node->next_ptr[ascii_char] == NULL)
         return OSIX_FAILURE;
 
-    node *nxt_ptr = curr_node->next_ptr[ascii_char];
-    nxt_ptr->data_char = new_char;  
-
     return OSIX_SUCCESS;
 }
 
@@ -110,18 +107,62 @@ void free_node(node *curr_node)
  *                  everytime.
  * Return Value  :  node ptr/NULL
  */
-void * find_data(int trie_id,node *node_ptr, char *key, int offset)
+
+find_overlap(node *node_ptr, char *key, offset)
 {
+    int i = 0, j= 0, match_count = 0;
+    
+    if (node_ptr->key_size > strlen(key))
+        return 0;
+    else if(node_ptr->key_size == strlen(key))
+    {
+        if (0==strncpy(node_ptr->key,key,strlen(key)))
+        {
+            return strlen(key);
+        }    
+        return 0;
+    }
+    else
+    {
+        for (i = offset;i<key; i++,j++)
+        {
+            if (node_ptr->key[i] == key[j])
+            {
+                match_count++;
+            }
+            else
+            {
+                match_count = 0;
+                break;
+            }
+        }
+    }
+    return match_count;
+}
+
+
+find_data(int trie_id,node *nxt_ptr, char *key, int offset)
+{
+    int key_size = strlen(key);
+    int overlap_size = 0;
+    char *temp; 
+
     if (node_ptr == NULL)
         return NULL;
 
-    char c = key[offset];    
-   // printf ("<%c > str:%s offset %d\r\n",c,str,offset);
+    overlap_size = find_overlap (nxt_ptr, key, offset); 
+  
+    if (node_ptr->is_data_present)
+    {
+        if (overlap_size == key_size)
+            return node_ptr; 
+    }
+    
     if (offset == strlen(key))
     {
         if (node_ptr->is_data_present)
         {
-     //       printf("< returning node>\r\n");
+            printf("< returning node>\r\n");
             return node_ptr;
         }
         else
@@ -129,7 +170,10 @@ void * find_data(int trie_id,node *node_ptr, char *key, int offset)
             return NULL;
         }
     }
+  
+    int c=key[offset+overlap_size];   
+    printf ("<%c > str:%s offset %d\r\n",c,str,offset);
     node *nxt_ptr = node_ptr->next_ptr[c];
-    find_data(trie_id,nxt_ptr,key,offset+1);
+    find_data(trie_id,nxt_ptr, key, offset+1+overlap_size);
 }
 

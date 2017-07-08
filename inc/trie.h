@@ -17,10 +17,11 @@ typedef int bool;
 typedef struct node
 {
     bool is_data_present;
-    char data_char;
-    struct node *next_ptr[256];
-    int size;
+    void *key;
+    int key_size;
     void *data;
+    int data_size;
+    struct node *next_ptr[256];
 }node;
 
 static node *trie_list[MAX_TRIE_NODES];

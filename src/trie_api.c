@@ -24,9 +24,66 @@ int trie_init(int trie_id)
  *                   into the key in the TRIE with id trie_id
  * Return Value   :  OSIX_SUCCESS
  */
-int trie_insert_data_into_key(int trie_id, char *key, void *data, int size)
+int trie_insert_data_into_key(int trie_id, char *key, int key_size, void *data, int data_size)
 {
     node *head = find_head(trie_id);
+    rec_trie_insert(head, key, key_size, data,dat_size);
+}
+
+void
+insert_key(node *node_ptr, char *key, int key_size)
+{
+    node_ptr->key_size = key_size;
+    node_ptr->key = malloc(key_size);
+    memcpy(node_ptr->key,key,key_size);
+    return;
+}
+
+void 
+insert_data_in_node(node *node_ptr, void *data, int data_size)
+{   
+    node_ptr->data_size= data_size;
+    node_ptr->data = malloc(data_size);
+    memcpy(node_ptr->data,data,data_size);
+    return;
+}
+
+void
+insert_key_and_data(node *node_ptr, char *key, int key_size, void *data, int data_size)
+{
+    if (!node_ptr->is_data_present)
+    {
+        insert_key(node_ptr,key,key_size);
+        insert_data_in_node(node_ptr,data,data_size);
+    }
+}
+
+rec_trie_insert(node *node_ptr, char *key, int key_size, void *data, int data_size, int offset)
+{
+    char *temp_key;
+    int overlap_count = 0;
+    if (!node_ptr->is_data_present)
+    {   
+        insert_key_and_data(node_ptr,key,key_size,data,data_size);
+    }
+    else
+    {
+        overlap_count = find_overlap(node *node_ptr, char *key, offset)
+        if (overlap_count==0)
+        {
+            create_node(node_ptr,key[offset]);
+            nxt_ptr = get_next_ptr(node_ptr,key[offset]);
+            rec_trie_insert(nxt_ptr,key,key_size,data,data_size,0);
+        }
+        else
+        {
+            create_node(node_ptr,key[offset]);
+            nxt_ptr = get_next_ptr(node_ptr,key[offset]);
+            temp_key = key+overlap_count;
+            rec_trie_insert(nxt_ptr,key,key_size,data,data_size,overlap_count);
+        }
+         
+
     int i = 0;
     node *curr_node = head;
     for (i = 0 ; i <strlen(key); i++)
