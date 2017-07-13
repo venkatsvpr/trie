@@ -1,3 +1,4 @@
-ASCII Character based TRIE Implementation
-
-
+ASCII Character based TRIE Implementation:
+==========================================
+Currently next node pointer is a 256 size array.
+Have to improvise the same with a better DS.

@@ -1,5 +1,8 @@
 #include "trie.h"
-
+/* Function name : my_alloc
+ * Description   : Allocates memory. Memsets it to zero
+ *                 and returns the pointer
+ */
 void *my_alloc(int size)
 {
     void *ptr = malloc(size);
